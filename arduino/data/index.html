@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html ng-app="SousVideApp">
+<head>
+  <title>SousVide cooker</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="initial-scale=1.0, width = device-width, user-scalable = no">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SousVide">
+  <meta name="apple-mobile-web-app-status-bar-style" content="white">
+
+  <script src="angular.min.js"></script>
+  <script src="grid.js"></script>
+
+  <link rel="icon" href="favicon.ico" type="image/x-icon"></link>
+  <link rel="apple-touch-icon" sizes="225x225" href="sousvide_nt.png"></link>
+  <link rel="apple-touch-startup-image" href="/launch.png"></link>
+
+  <link rel="stylesheet" href="grid.css"></link>
+  <link rel="stylesheet" href="bootstrap.min.css"></link>
+  <style type="text/css">
+.indic {
+  min-width: 75px !important;
+  display: inline-block !important;
+}
+
+.applDiv {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+  </style>
+</head>
+<body>
+<script>
+  var app = angular.module ("SousVideApp", [ "G2Grid" ]);
+
+  app.directive('ngPlaceholder', function($document) {
+    return {
+      restrict: 'A',
+      scope: {
+        placeholder: '=ngPlaceholder'
+      },
+      link: function(scope, elem, attr) {
+        scope.$watch('placeholder',function() {
+          elem[0].placeholder = scope.placeholder;
+        });
+      }
+    }
+  });
+
+  app.controller ("MainCtrl", function ($scope, $http, $interval) {
+    $scope.error = "";
+    $scope.setup = false;
+    $scope.connected = false;
+
+    $scope.data = { }
+
+    $scope.timerMins = null;
+    $scope.reqTemperature = null;
+
+    $scope.configuration = {
+      kp : 0,
+      ki : 0,
+      kd : 0,
+      bang : 0
+    }
+
+    $scope.espGetData = function (data, callback) {
+      $http.post ("/cmd", data).then (function (response) {
+        if (response.status == 200) {
+          $scope.error = "";
+          $scope.data = response.data;
+        } else {
+          $scope.error = "HTTP ERROR " + response.status + "!";
+        }
+
+        if (callback) callback();
+      }, function (err) {
+        $scope.error = err;
+      });
+    }
+
+    $scope.espGetConfig = function (callback) {
+      $http.get ("/setup").then (function (response) {
+        if (response.status == 200) {
+          $scope.error = "";
+          $scope.configuration = response.data;
+        } else {
+          $scope.error = "HTTP ERROR " + response.status + "!";
+        }
+
+        if (callback) callback();
+      }, function (err) {
+        $scope.error = err;
+      });
+    }
+
+    $scope.espSetConfig = function (callback) {
+      $http.post ("/setup", $scope.configuration).then (function (response) {
+        if (response.status == 200) {
+          $scope.error = "";
+          $scope.configuration = response.data;
+        } else {
+          $scope.error = "HTTP ERROR " + response.status + "!";
+        }
+
+        if (callback) callback();
+      }, function (err) {
+        $scope.error = err;
+      });
+    }
+    
+    $scope.set = function() {
+      $scope.error = "";
+      var tm = parseInt ($scope.timerMins);
+
+      var sendData = {};
+
+      if (!isNaN (tm)) {
+        angular.extend (sendData, { timerMins : tm });
+      }
+
+      var temp = parseFloat ($scope.reqTemperature);
+      if (!isNaN (temp)) {
+        angular.extend (sendData, { reqTemperature : temp });
+      }
+
+      $scope.espGetData (sendData, function() {
+        $scope.timerMins = null;
+      });
+    }
+
+    $scope.off = function() {
+      $scope.espGetData ( { reqTemperature : 0, timerMins : 0 }, function() {
+        $scope.timerMins = null;
+        $scope.reqTemperature = null;
+      });
+    }
+
+    $scope.updateData = function() {
+      $scope.espGetData ( { } );
+    }
+
+    $scope.runSetup = function() {
+      $scope.espGetConfig (function() {
+        $scope.setup = true;
+      });
+    }
+    
+    $scope.saveConfig = function() {
+      $scope.espSetConfig (function() {
+        $scope.setup = false;
+      });
+    }
+
+    $scope.rejectConfig = function() {
+      $scope.espGetConfig (function() {
+        $scope.setup = false;
+      });
+    }
+
+    $scope.espGetData ({}, function() {
+      $scope.reqTemperature = $scope.data.reqTemperature;
+
+      $interval ($scope.updateData, 5000);
+
+      $scope.connected = true;
+    });
+  });
+</script>
+<div g ng-controller="MainCtrl" class="applDiv">
+  <div gi class="page-header"><h3>SousVide cooker</h3></div>
+  <div gi class="alert alert-danger" ng-show="error">ERROR: {{ error }}</div>
+  <div gi class="alert alert-info" ng-show="!connected">Connecting...</div>
+
+  <div gi ng-show="!setup && connected">
+    <div g>
+      <div gi>
+        <span class="label indic label-{{ data.pumpState ? 'success' : 'default' }}">PUMP</span>
+        <span class="label indic label-{{ data.heaterState ? 'success' : 'default' }}">{{ data.heaterPercent }}%</span>
+        <span class="label indic label-{{ data.waterLevel ? 'success' : 'danger' }}">{{ data.state }}</span>
+      </div>
+      <div gi="1/2 palm-1">
+        <div class="input-group"><input type="text" class="form-control" ng-model="data.curTemperature" ng-disabled="true"></input><span class="input-group-addon">°C</span></div>
+      </div><div gi="1/2 palm-1">
+        <div class="input-group"><input type="text" class="form-control" placeholder="Requested temp" ng-model="reqTemperature"></input><span class="input-group-addon">°C</span></div>
+      </div><div gi="1/2 palm-1">
+        <div class="input-group"><input type="text" class="form-control" ng-placeholder="data.timerStateString" ng-model="timerMins"></input><span class="input-group-addon">min.</span></div>
+      </div><div gi>
+        <div g>
+          <div gi="1/2">
+            <button type="button" class="btn btn-default" ng-click="set()">Set</button>
+          </div><div gi="1/2">
+            <div g>
+              <div gi="1/3">
+              </div><div gi="1/3">
+                <button type="button" class="btn btn-info pull-right" ng-click="runSetup()">Setup</button>
+              </div><div gi="1/3">
+                <button type="button" class="btn btn-danger pull-right" ng-click="off()">Off</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div gi ng-show="setup && connected">
+    <div g>
+      <div gi><h4>Configuration</h4></div>
+      <div gi="1/3 palm-1">
+        <div class="input-group"><span class="input-group-addon">Kp</span><input type="text" class="form-control" ng-model="configuration.kp"></input></div>
+      </div><div gi="1/3 palm-1">
+        <div class="input-group"><span class="input-group-addon">Ki</span><input type="text" class="form-control" ng-model="configuration.ki"></input></div>
+      </div><div gi="1/3 palm-1">
+        <div class="input-group"><span class="input-group-addon">Kd</span><input type="text" class="form-control" ng-model="configuration.kd"></input></div>
+      </div><div gi="1/3 palm-1">
+        <div class="input-group"><span class="input-group-addon">Bang</span><input type="text" class="form-control" ng-model="configuration.bang"></input></div>
+      </div><div gi>
+        <div g>
+          <div gi="1/2">
+            <button type="button" class="btn btn-default" ng-click="saveConfig()">Save</button>
+          </div><div gi="1/2">
+            <button type="button" class="btn btn-danger pull-right" ng-click="rejectConfig()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+

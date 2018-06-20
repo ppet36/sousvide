@@ -1,0 +1,32 @@
+{
+  "Vepřové" : [
+    { "Medium Rare" : 49 },
+    { "Medium" : 60 },
+    { "Well Done" : 72 }
+  ],
+  "Hovězí" : [
+    { "Rare" : 49 },
+    { "Medium Rare" : 56.5 },
+    { "Medium" : 60 },
+    { "Medium Well" : 65.5 },
+    { "Well Done" : 72 }
+  ],
+  "Drůbež" : [
+    { "Medium Rare" : 56.5 },
+    { "Medium" : 62 },
+    { "Well Done" : 80 }
+  ],
+  "Ryby" : [
+    { "Rare" : 47 },
+    { "Medium Rare" : 52 },
+    { "Medium" : 60 }
+  ],
+  "Zelenina" : [
+    { "Tvrdá" : 85 }
+  ],
+  "Vejce" : [
+    { "Vařené na měkko" : 64 },
+    { "Vařené na tvrdo" : 71 }
+  ]
+}
+
