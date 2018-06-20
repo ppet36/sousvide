@@ -3,11 +3,11 @@
  *
  * Pins asignment:
  *
- * ADC    - water level sensor.
- * GPIO0  - triac switch for heater.
- * GPIO2  - triac switch for pump.
- * GPIO4  - OneWire DS18B20
- * GPIO5  - green status led.
+ * ADC     - water level sensor.
+ * GPIO12  - triac switch for heater.
+ * GPIO13  - triac switch for pump.
+ * GPIO4   - OneWire DS18B20
+ * GPIO5   - green status led.
  *
  * Code uses ArduinoJson, SPIFFS and OTA library.
  *
@@ -27,7 +27,7 @@
 
 // WIFI
 #define WIFI_AP_SSID "SousVideCooker"
-#define WIFI_AP_PWD "serepesnanocnik"
+#define WIFI_AP_PWD "123456"
 #define WEB_SERVER_PORT 80
 
 #define PIN_WATER_LEVEL A0
