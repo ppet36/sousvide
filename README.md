@@ -41,6 +41,6 @@ PCB is designed to fit on top of mounting cube.
 
 ![alt](/images/unboxed.jpg?raw=true)
 
-
+(PCB on image is working prototype and not exactly same as eagle/* resources).
 
 
