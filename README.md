@@ -22,6 +22,8 @@ http://192.168.4.1/
 ```
 ![alt](/images/appl.png?raw=true)
 
+AP password is defaulted to 123456 and can be set in fw source file.
+
 Via application can be also set PID parameters for heater. Firmware uses AutoPID
 library from https://github.com/r-downing/AutoPID.
 
@@ -35,8 +37,10 @@ Module is powered via 5V/1A PSU.
 
 ![alt](/eagle/board.png?raw=true)
 
-PCB is designed to fit top of mounting cube.
+PCB is designed to fit on top of mounting cube.
 
 ![alt](/images/unboxed.jpg?raw=true)
+
+
 
 
