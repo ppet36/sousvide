@@ -27,6 +27,8 @@ AP password is defaulted to 123456 and can be set in fw source file.
 
 Via application can be also set PID parameters for heater. Firmware uses AutoPID
 library from https://github.com/r-downing/AutoPID.
+Also other Arduino libraries is used; for example:
+https://github.com/milesburton/Arduino-Temperature-Control-Library
 
 Heater as well as pump is driven via triacs. Duo MOC3041/BT136 is used for heater
 and plain MOC3041 for pump (which is only 5W). For 500W heater is not needed
@@ -40,12 +42,12 @@ You can use also 3.3V PSU instead of 5V; so linear regulator is not needed.
 
 ![alt](/eagle/board.png?raw=true)
 
-PCB is designed to fit on top of mounting cube. All connections except of power supply cord
+PCB is designed to fit on top of mounting cube. All connections (except of power supply cord)
 is connected from bottom side of PCB.
 
 ![alt](/images/unboxed.jpg?raw=true)
 
-(PCB in image is working prototype and not looking exactly same as eagle/* resources;
-i modified schematic and PCB layout later taking into account experiences)
+(PCB in image is working prototype and not looking exactly same as in eagle/* resources;
+I modified schematic and PCB layout later taking into account experiences)
 
 
