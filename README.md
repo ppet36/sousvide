@@ -27,8 +27,8 @@ AP password is defaulted to 123456 and can be set in fw source file.
 
 Via application can be also set PID parameters for heater. Firmware uses AutoPID
 library from https://github.com/r-downing/AutoPID.
-Also other Arduino libraries is used; for example:
-https://github.com/milesburton/Arduino-Temperature-Control-Library
+Also other Arduino libraries is used https://github.com/milesburton/Arduino-Temperature-Control-Library,
+https://github.com/bblanchon/ArduinoJson ...
 
 Heater as well as pump is driven via triacs. Duo MOC3041/BT136 is used for heater
 and plain MOC3041 for pump (which is only 5W). For 500W heater is not needed

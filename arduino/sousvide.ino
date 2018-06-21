@@ -99,8 +99,8 @@ SvConfiguration config;
 int state;
 
 // Last heater on time
-unsigned long lastHeaterOnTime = 0;
-unsigned long lastHeaterOffTime = millis();
+unsigned long lastHeaterOnTime = 0UL;
+unsigned long lastHeaterOffTime = 0UL;
 
 
 /**
@@ -223,7 +223,10 @@ String getContentType (String filename) {
 bool handleFileRead (String path) {
   Serial.print(F("handleFileRead (")); Serial.print (path); Serial.print (F(")"));
 
-  if (path.endsWith("/")) path += "index.html";
+  if (path.endsWith("/")) {
+    path += "index.html";
+  }
+
   String pathWithGz = path + ".gz";
 
   String foundPath;
@@ -306,14 +309,17 @@ void maintainHeater() {
   if (waterLevel) {
     digitalWrite (PIN_HEATER, heaterVal ? HIGH : LOW);
 
-    static bool lastHeaterStateChange = heaterVal;
-    if (heaterVal != lastHeaterStateChange) {
+    static bool lastHeaterState = heaterVal;
+    static unsigned long lastHeaterStateChange = millis();
+
+    if (heaterVal != lastHeaterState) {
       if (heaterVal) {
         lastHeaterOffTime = millis() - lastHeaterStateChange;
       } else {
         lastHeaterOnTime = millis() - lastHeaterStateChange;
       }
 
+      lastHeaterState = heaterVal;
       lastHeaterStateChange = millis();
     }
   } else {
