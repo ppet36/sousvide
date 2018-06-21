@@ -13,9 +13,10 @@ ESP PIN is used for detecting water level and protecting "dry" run of cooker.
 Some parts are printed on 3D printer, bottom part of cooker is bended aluminium
 sheet.
 
-Memory of ESP12E is divided 1M for firmware and 3M for SPIFFS. Application
-(arduino/data/*) is uploaded to ESP's SPIFFS and is served via internal HTTP
-server. Firmware creates AP SousVideCooker with listening HTTP server at:
+Memory of ESP12E is divided into two parts; 1M for firmware and 3M for SPIFFS.
+Application (arduino/data/*) is uploaded to ESP's SPIFFS and is served via
+internal HTTP server. Firmware creates AP SousVideCooker with listening HTTP server
+at:
 
 ```
 http://192.168.4.1/
@@ -29,18 +30,22 @@ library from https://github.com/r-downing/AutoPID.
 
 Heater as well as pump is driven via triacs. Duo MOC3041/BT136 is used for heater
 and plain MOC3041 for pump (which is only 5W). For 500W heater is not needed
-additional BT136 cooling.
+additional BT136 cooling but small TO220 heatsink is suitable.
 
 ![alt](/eagle/schematic.png?raw=true)
 
-Module is powered via 5V/1A PSU.
+Module is powered via 5V/1A PSU. Many of theses is on ebay; for example:
+https://www.ebay.com/sch/i.html?&_nkw=High-Grade-12V-5V-24V-9V-AC-DC-Power-Supply-Buck-Converter-Step-Down-Module
+You can use also 3.3V PSU instead of 5V; so linear regulator is not needed.
 
 ![alt](/eagle/board.png?raw=true)
 
-PCB is designed to fit on top of mounting cube.
+PCB is designed to fit on top of mounting cube. All connections except of power supply cord
+is connected from bottom side of PCB.
 
 ![alt](/images/unboxed.jpg?raw=true)
 
-(PCB on image is working prototype and not exactly same as eagle/* resources).
+(PCB in image is working prototype and not looking exactly same as eagle/* resources;
+i modified schematic and PCB layout later taking into account experiences)
 
 
