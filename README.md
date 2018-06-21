@@ -48,6 +48,6 @@ is connected from bottom side of PCB.
 ![alt](/images/unboxed.jpg?raw=true)
 
 (PCB in image is working prototype and not looking exactly same as in eagle/* resources;
-I modified schematic and PCB layout later taking into account experiences)
+I modified schematic and PCB layout later taking experiences into account)
 
 
