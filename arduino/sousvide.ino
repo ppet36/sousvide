@@ -11,7 +11,7 @@
  *
  * Code uses ArduinoJson, SPIFFS and OTA library.
  *
- * @author ppet26
+ * @author ppet36
 */
 #include <AutoPID.h>
 #include <DallasTemperature.h>
